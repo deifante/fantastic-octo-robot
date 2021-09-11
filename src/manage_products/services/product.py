@@ -9,6 +9,13 @@ class ProductServiceException(Exception):
     pass
 
 
+def view_product(product_id: int) -> Product:
+    product = get_product(product_id)
+    product.views += 1
+    update_product(product)
+    return product
+
+
 def create_product(product: ProductCreate) -> Product:
     query = """
     INSERT INTO products (name, price, description)
@@ -35,10 +42,20 @@ def get_product(product_id: int) -> Product:
     """
     params = (product_id,)
     result = sqlite.read(query=query, params=params)
-    if result:
-        return _convert_to_product(result)
+    if result and len(result) == 1:
+        return _convert_to_product(result[0])
     else:
         raise ProductServiceException(f"Unable to get product with id: {product_id}")
+
+
+def update_product(product: Product):
+    query = """
+    UPDATE products
+    SET name = ?, price = ?, description = ?, views = ?, is_deleted = ?
+    WHERE id = ?
+    """
+    params = (product.name, product.price, product.description, product.views, product.is_deleted, product.id)
+    sqlite.write(query=query, params=params)
 
 
 # TODO: Implement this method

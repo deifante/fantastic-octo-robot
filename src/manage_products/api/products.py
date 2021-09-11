@@ -16,16 +16,15 @@ def create_product(product_input: product_schemas.ProductCreate) -> Product:
     return product.create_product(product=product_input)
 
 
-# TODO: Implement this method
 @router.get("/api/products/{product_id}", response_model=product_schemas.Product)
 async def get_product(product_id: int):
-    raise Exception("get_product endpoint is not implemented")
+    return product.view_product(product_id=product_id)
 
 
 # TODO: Implement this method
 @router.delete("/api/products/{product_id}", response_model=product_schemas.Product)
 def delete_product(product_id: int):
-    raise Exception("delete_product endpoint is not implemented")
+    raise NotImplementedError("delete_product endpoint is not implemented")
 
 
 @router.get("/api/products")

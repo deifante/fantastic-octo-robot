@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi.testclient import TestClient
 
 from manage_products.main import api
@@ -28,10 +30,14 @@ def test_list_products(products_route: str):
 def test_get_product(products_route: str, new_random_product: dict):
     source_product = Product(**client.post(products_route, json=new_random_product).json())
     dest_product = Product(**client.get(f"{products_route}/{source_product.id}").json())
-    assert source_product.dict() == dest_product.dict()
+
+    assert source_product.dict(exclude={"created_date", "views"}) == dest_product.dict(exclude={"created_date", "views"})
+    assert source_product.views + 1 == dest_product.views
+    assert source_product.created_date - dest_product.created_date < datetime.timedelta(seconds=1)
 
 
-# def test_delete_product(products_route: str, new_random_product:dict):
+# def test_delete_product(products_route: str, new_random_product: dict):
 #     new_product = Product(**client.post(products_route, json=new_random_product).json())
+#     delete_response
 #
 #     delete_response = client.delete(products_route + new_product.id)
