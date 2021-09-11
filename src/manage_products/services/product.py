@@ -5,6 +5,10 @@ from manage_products.models.product import Product
 from manage_products.models.product_schemas import ProductCreate
 
 
+class ProductServiceException(Exception):
+    pass
+
+
 def create_product(product: ProductCreate) -> Product:
     query = """
     INSERT INTO products (name, price, description)
@@ -22,14 +26,24 @@ def create_product(product: ProductCreate) -> Product:
     )
 
 
-# TODO: Implement this method
-def get_product(product_id: int) -> Optional[Product]:
-    raise Exception("get_product service is not implemented")
+def get_product(product_id: int) -> Product:
+    query = """
+    SELECT id, name, price, description, views, is_deleted, created_date
+    FROM products
+    WHERE is_deleted == 0
+    AND id = ?
+    """
+    params = (product_id,)
+    result = sqlite.read(query=query, params=params)
+    if result:
+        return _convert_to_product(result)
+    else:
+        raise ProductServiceException(f"Unable to get product with id: {product_id}")
 
 
 # TODO: Implement this method
 def delete_product(product_id: int) -> Product:
-    raise Exception("delete_product service is not implemented")
+    raise NotImplementedError("delete_product service is not implemented")
 
 
 def get_products(skip: int = 0, limit: int = 5) -> List[Product]:
