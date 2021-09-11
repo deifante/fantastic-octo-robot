@@ -1,6 +1,6 @@
 name := "manage-products-service:1.0"
 
-.PHONY: help
+.PHONY: help test
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -22,8 +22,8 @@ virtualenv: ## create virtual environment
 	pipenv install
 
 lint: ## format source
-	pipenv run black manage_products
+	pipenv run black manage_products test
 
-test: ## test source
+test:
 	export PYTHONPATH='./':$(PYTHONPATH) ; \
-	pipenv run pytest
+	pipenv run pytest -s
