@@ -17,3 +17,12 @@ all: build run # build and run docker image
 
 create-db: ## create database from sql script
 	sqlite3 manage_products/products.db < manage_products/data/schema.sql
+
+virtualenv: ## create virtual environment
+	pipenv install
+
+lint: ## format source
+	pipenv run black manage_products
+
+test: ## test source
+	pipenv run pytest

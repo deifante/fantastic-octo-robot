@@ -129,3 +129,9 @@ dmypy.json
 .pyre/
 
 *.DS_Store
+
+# SQL lite database
+products.db
+
+# Jetbrains IDE files
+*.idea/

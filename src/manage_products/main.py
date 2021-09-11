@@ -16,8 +16,6 @@ def configure_routing():
     api.include_router(products.router)
 
 
+configure()
 if __name__ == "__main__":
-    configure()
     uvicorn.run(api, host="127.0.0.1")
-else:
-    configure()
