@@ -58,9 +58,11 @@ def update_product(product: Product):
     sqlite.write(query=query, params=params)
 
 
-# TODO: Implement this method
 def delete_product(product_id: int) -> Product:
-    raise NotImplementedError("delete_product service is not implemented")
+    product = get_product(product_id)
+    product.is_deleted = True
+    update_product(product)
+    return product
 
 
 def get_products(skip: int = 0, limit: int = 5) -> List[Product]:

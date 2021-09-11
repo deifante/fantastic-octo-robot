@@ -1,8 +1,10 @@
 import fastapi
+from fastapi import HTTPException
 
 from manage_products.models import product_schemas
 from manage_products.models.product import Product
 from manage_products.services import product
+from manage_products.services.product import ProductServiceException
 
 router = fastapi.APIRouter()
 
@@ -18,13 +20,18 @@ def create_product(product_input: product_schemas.ProductCreate) -> Product:
 
 @router.get("/api/products/{product_id}", response_model=product_schemas.Product)
 async def get_product(product_id: int):
-    return product.view_product(product_id=product_id)
+    try:
+        return product.view_product(product_id=product_id)
+    except ProductServiceException as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
-# TODO: Implement this method
 @router.delete("/api/products/{product_id}", response_model=product_schemas.Product)
 def delete_product(product_id: int):
-    raise NotImplementedError("delete_product endpoint is not implemented")
+    try:
+        return product.delete_product(product_id=product_id)
+    except ProductServiceException as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.get("/api/products")

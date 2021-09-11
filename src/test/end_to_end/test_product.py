@@ -31,13 +31,25 @@ def test_get_product(products_route: str, new_random_product: dict):
     source_product = Product(**client.post(products_route, json=new_random_product).json())
     dest_product = Product(**client.get(f"{products_route}/{source_product.id}").json())
 
-    assert source_product.dict(exclude={"created_date", "views"}) == dest_product.dict(exclude={"created_date", "views"})
+    assert source_product.dict(exclude={"created_date", "views"}) == dest_product.dict(
+        exclude={"created_date", "views"}
+    )
     assert source_product.views + 1 == dest_product.views
     assert source_product.created_date - dest_product.created_date < datetime.timedelta(seconds=1)
 
 
-# def test_delete_product(products_route: str, new_random_product: dict):
-#     new_product = Product(**client.post(products_route, json=new_random_product).json())
-#     delete_response
-#
-#     delete_response = client.delete(products_route + new_product.id)
+def test_delete_product(products_route: str, new_random_product: dict):
+    new_product = Product(**client.post(products_route, json=new_random_product).json())
+    deleted_product = Product(**client.delete(f"{products_route}/{new_product.id}").json())
+
+    assert new_product.dict(exclude={"created_date", "views", "is_deleted"}) == deleted_product.dict(
+        exclude={"created_date", "views", "is_deleted"}
+    )
+    assert deleted_product.is_deleted is True
+
+
+def test_get_invalid_item(products_route: str):
+    """Assert the server doesn't 500 on an invalid get request ID"""
+    invalid_product_id = -1
+    response = client.get(f"{products_route}/{invalid_product_id}")
+    assert str(invalid_product_id) in response.json()["detail"]
