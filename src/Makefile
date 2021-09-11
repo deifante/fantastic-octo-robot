@@ -25,4 +25,5 @@ lint: ## format source
 	pipenv run black manage_products
 
 test: ## test source
+	export PYTHONPATH='./':$(PYTHONPATH) ; \
 	pipenv run pytest

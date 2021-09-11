@@ -3,5 +3,5 @@ line-length = 120
 target-version = ['py38']
 
 [tool.pytest.ini_options]
-testpaths = ["manage_products"]
+testpaths = ["manage_products/test/end_to_end"]
 log_cli = true
