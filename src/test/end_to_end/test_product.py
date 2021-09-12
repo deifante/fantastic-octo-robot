@@ -38,6 +38,14 @@ def test_get_product(products_route: str, new_random_product: dict):
     assert source_product.created_date - dest_product.created_date < datetime.timedelta(seconds=1)
 
 
+def test_get_product_with_currency(products_route: str, new_random_product: dict):
+    product = Product(**client.post(products_route, json=new_random_product).json())
+    params = {"currency": "CAD"}
+    cad_product = Product(**client.get(f"{products_route}/{product.id}", params=params).json())
+
+    assert product.price != cad_product
+
+
 def test_delete_product(products_route: str, new_random_product: dict):
     new_product = Product(**client.post(products_route, json=new_random_product).json())
     deleted_product = Product(**client.delete(f"{products_route}/{new_product.id}").json())
