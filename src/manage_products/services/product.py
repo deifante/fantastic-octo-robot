@@ -1,18 +1,22 @@
 from typing import List, Optional
 
 from manage_products.db import sqlite
+from manage_products.models.currency_conversion import DEFAULT_CURRENCY
 from manage_products.models.product import Product
 from manage_products.models.product_schemas import ProductCreate
+from manage_products.services.currency import convert_product_currency
 
 
 class ProductServiceException(Exception):
     pass
 
 
-def view_product(product_id: int) -> Product:
+def view_product(product_id: int, currency: str = None) -> Product:
     product = get_product(product_id)
     product.views += 1
     update_product(product)
+    if currency and currency != DEFAULT_CURRENCY:
+        product = convert_product_currency(product, currency)
     return product
 
 

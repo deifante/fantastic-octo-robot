@@ -8,3 +8,11 @@ CREATE TABLE products (
    is_deleted INTEGER NOT NULL DEFAULT 0,
    created_date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
+DROP TABLE IF EXISTS conversions;
+create TABLE conversions (
+   dest TEXT PRIMARY KEY NOT NULL,
+   rate REAL NOT NULL,
+   updated_at INTEGER NOT NULL
+)

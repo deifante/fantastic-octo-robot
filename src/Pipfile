@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 fastapi = ">=0.67.0"
 uvicorn = ">=0.14.0"
+python-dotenv = "*"
+requests = ">=2.26.0"
 
 [dev-packages]
 pytest = ">=6.2.5"
-requests = ">=2.26.0"
 Faker = ">=8.12.1"
 black = "*"
 

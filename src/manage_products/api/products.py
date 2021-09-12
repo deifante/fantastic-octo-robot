@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from manage_products.models import product_schemas
 from manage_products.models.product import Product
 from manage_products.services import product
+from manage_products.services.currency import CurrencyServiceException
 from manage_products.services.product import ProductServiceException
 
 router = fastapi.APIRouter()
@@ -19,11 +20,13 @@ def create_product(product_input: product_schemas.ProductCreate) -> Product:
 
 
 @router.get("/api/products/{product_id}", response_model=product_schemas.Product)
-async def get_product(product_id: int):
+async def get_product(product_id: int, currency=None):
     try:
-        return product.view_product(product_id=product_id)
+        return product.view_product(product_id=product_id, currency=currency)
     except ProductServiceException as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except CurrencyServiceException as cse:
+        raise HTTPException(status_code=422, detail=str(cse))
 
 
 @router.delete("/api/products/{product_id}", response_model=product_schemas.Product)
