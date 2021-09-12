@@ -90,9 +90,7 @@ def get_conversion(currency: str) -> Conversion:
         return _convert_to_conversion(result[0])
     else:
         currencies_string = ", ".join(VALID_CURRENCIES)
-        raise CurrencyServiceException(
-            f"Unable to get currency with code: '{currency}'. Valid currencies: {currencies_string}."
-        )
+        raise CurrencyServiceException(f"Unable to get currency: '{currency}'. Valid currencies: {currencies_string}.")
 
 
 def _convert_to_conversion(item: Dict[str, Union[str, float, int]]) -> Conversion:
