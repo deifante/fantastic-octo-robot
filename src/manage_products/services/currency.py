@@ -1,4 +1,5 @@
 """Currency Service """
+import dataclasses
 import datetime
 from typing import Dict, Union
 
@@ -34,8 +35,9 @@ def refresh_exchange_rates():
 
 def convert_product_currency(product: Product, to_currency: str) -> Product:
     refresh_exchange_rates()
-    product.price = convert_currency(product.price, to_currency=to_currency)
-    return product
+    new_price = convert_currency(product.price, to_currency=to_currency)
+    new_product = dataclasses.replace(product, price=new_price)
+    return new_product
 
 
 def convert_currency(amount: float, to_currency: str) -> float:
