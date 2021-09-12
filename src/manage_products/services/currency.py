@@ -1,6 +1,5 @@
 """Currency Service """
 import datetime
-from functools import reduce
 from typing import Dict, Union
 
 import requests
@@ -46,7 +45,7 @@ def convert_currency(amount: float, to_currency: str) -> float:
 
 def fetch_conversions() -> ConversionResponse:
     currency_list = filter(lambda c: c != DEFAULT_CURRENCY, VALID_CURRENCIES)
-    currency_string = reduce(lambda x, y: x + "," + y, currency_list)
+    currency_string = ",".join(currency_list)
     params = {
         "access_key": API_KEY,
         "currencies": currency_string,
@@ -90,7 +89,7 @@ def get_conversion(currency: str) -> Conversion:
     if result and len(result) == 1:
         return _convert_to_conversion(result[0])
     else:
-        currencies_string = reduce(lambda x, y: x + ", " + y, VALID_CURRENCIES)
+        currencies_string = ", ".join(VALID_CURRENCIES)
         raise CurrencyServiceException(
             f"Unable to get currency with code: '{currency}'. Valid currencies: {currencies_string}."
         )
